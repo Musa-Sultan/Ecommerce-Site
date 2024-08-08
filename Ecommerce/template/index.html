@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <script type="text/javascript">
+      var user = '{{ request.user}}'
+      function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')
+    </script>
+    <title>Product Page</title>
+</head>
+<body>
+    <!-- header section -->
+  <header>
+    <div class="menu">
+      <div class="logo">
+      </div>
+      <div class="home">
+        <a href="{% url 'store' %}">Masaga</a>
+      </div>
+      <div class="Store">
+        <a href="{% url 'store' %}">Store</a>
+      </div>
+      <div class="contact">
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="login">
+        <a href="#">Login</a>
+      </div>
+      <div class="cart">
+        <a href="{% url 'cart' %}">
+            <img id="cart-icon" src="{% static 'image/cart.png' %}" alt="">
+         </a>
+      </div>
+      <div class="cart-total">
+        <p id="cart-total">{{ cartItems }}</p>
+      </div>
+    </div>
+  </header>
+<!-- end of header -->
+    <div class="row">
+      {% for product in products %}
+      <div class="col">
+          <img class="thumbnail" src="{{product.imageURL}}" alt="">
+          <div class="box-element">
+              <h6><strong>{{product.name}}</strong></h6>
+              <hr>
+              <button data-product="{{product.id}}" data-action="add" id="add_to_cart" class="update-card">Add To Cart</button>
+              <a href="#" id="view">View</a>
+              <h4><strong>${{product.price}}</strong></h4>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+  <!-- footer section -->
+  <section id="contact">
+    <footer class="footer">
+        <div class="left-side">
+          <div class="contact1">
+            <div class="contact-form" id="contact">
+              <h2>Contact Us</h2>
+              <form method="POST" action="{% url 'contact' %}">
+                {% csrf_token %}
+                <div class="form-group1">
+                  <label for="name">Your Name</label>
+                  <input type="text" id="name" placeholder="Enter Your Name " name="name" required>
+                </div>
+                <div class="form-group1">
+                  <label for="email">Your Email</label>
+                  <input type="email" id="email" placeholder="Enter Your Email" name="email" required>
+                </div>
+                <div class="form-group1">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" placeholder="Enter Your Message" required></textarea>
+                </div>
+                <div class="form-group1">
+                  <button type="submit" name="submit">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div class="message">
+              <p style="color: greenyellow; background-color: #333; padding: 5px;">{{Message}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="middle-section">
+            <div class="contact-info">
+                <p><img src="{% static 'image/email.png' %}" alt="Email Icon" width="20" height="20"> Email: support@masagaonline.pk</p>
+                <p><img src="{% static 'image/phone.png' %}" alt="Phone Icon" width="20" height="20"> Call us ( 0342-7654675 )</p>
+                <p><img src="{% static 'image/adress.png' %}" alt="Address Icon" width="20" height="20"> outlet Address (Masaga Shop),
+                  chakdara,
+                    Paksitan</p>
+            </div>
+        </div>
+    </footer>
+</section>
+  
+  <!-- end of footer -->
+
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+  
+</body>
+</html>
